@@ -6,21 +6,64 @@
 <title>Binärsystem — Lernkurs Klasse 7</title>
 <style>
 :root{
+  --r:14px;
+  --mono:ui-monospace,"Cascadia Mono","Segoe UI Mono","SF Mono",Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+
+/* ---------- Farbschema: dunkel (Standard) ---------- */
+:root,:root[data-theme="dark"]{
+  color-scheme:dark;
   --bg:#121926;
   --panel:#1B2534;
   --panel-hi:#243044;
   --line:#334357;
+  --line-hi:#4A5E76;
   --text:#EAF0F6;
   --soft:#95A6B8;
   --lamp:#FFC24B;
   --lamp-deep:#F0930C;
   --lamp-off:#2B3849;
+  --lamp-line:#3A4A5E;
+  --lamp-line-hi:#5C7086;
+  --lamp-hi:#FFDF9B;
+  --lamp-shadow:inset 0 2px 5px rgba(0,0,0,.55);
   --ok:#6FCF97;
   --no:#F08A8A;
   --focus:#7FD3FF;
-  --r:14px;
-  --mono:ui-monospace,"Cascadia Mono","Segoe UI Mono","SF Mono",Menlo,Consolas,monospace;
-  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --stage:#0E141F;
+  --top-bg:rgba(18,25,38,.94);
+  --accent-ink:var(--lamp);
+  --btn-ink:#241703;
+  --btn-hover:#FFD277;
+  --choice-on:#2E2718;
+}
+/* ---------- Farbschema: hell ---------- */
+:root[data-theme="light"]{
+  color-scheme:light;
+  --bg:#F2F5F9;
+  --panel:#FFFFFF;
+  --panel-hi:#E7EDF5;
+  --line:#CBD6E2;
+  --line-hi:#9FB0C4;
+  --text:#131C27;
+  --soft:#54677C;
+  --lamp:#E89100;
+  --lamp-deep:#C26A00;
+  --lamp-off:#D3DCE7;
+  --lamp-line:#AEBCCC;
+  --lamp-line-hi:#7D8FA3;
+  --lamp-hi:#B36A00;
+  --lamp-shadow:inset 0 2px 4px rgba(15,30,50,.16);
+  --ok:#1B7F4F;
+  --no:#C0392B;
+  --focus:#0B72C4;
+  --stage:#EBF0F7;
+  --top-bg:rgba(242,245,249,.94);
+  --accent-ink:#8A5200;
+  --btn-ink:#2A1A03;
+  --btn-hover:#FFA824;
+  --choice-on:#FFF3DC;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;overflow-x:hidden}
@@ -37,13 +80,13 @@ body{
 /* ---------- Kopf ---------- */
 header.top{
   position:sticky;top:0;z-index:20;
-  background:rgba(18,25,38,.94);
+  background:var(--top-bg);
   backdrop-filter:blur(8px);
   border-bottom:1px solid var(--line);
 }
 .top-in{max-width:820px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:14px}
 .brand{font-weight:800;letter-spacing:-.02em;font-size:15px;white-space:nowrap}
-.brand span{color:var(--lamp)}
+.brand span{color:var(--accent-ink)}
 .rail{flex:1;display:flex;gap:5px;align-items:center}
 .pip{flex:1;height:7px;border-radius:99px;background:var(--lamp-off);min-width:8px}
 .pip.done{background:var(--lamp)}
@@ -53,7 +96,8 @@ header.top{
   font:inherit;font-size:13px;padding:6px 11px;border-radius:99px;cursor:pointer;white-space:nowrap
 }
 .toolbtn:hover{background:var(--panel-hi);color:var(--text)}
-.toolbtn[aria-pressed="true"]{border-color:var(--lamp);color:var(--lamp)}
+#themeToggle{font-size:15px;line-height:1.25;padding:6px 10px}
+.toolbtn[aria-pressed="true"]{border-color:var(--lamp);color:var(--accent-ink)}
 
 /* ---------- Typo ---------- */
 h1{font-size:clamp(29px,6.4vw,44px);line-height:1.1;letter-spacing:-.03em;font-weight:800;margin:0 0 14px}
@@ -70,7 +114,7 @@ b,strong{font-weight:700}
 /* ---------- Karten ---------- */
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:22px;margin:18px 0}
 .card.flat{background:transparent;border-style:dashed}
-.stage{margin:22px 0;padding:24px 16px;background:#0E141F;border:1px solid var(--line);border-radius:var(--r)}
+.stage{margin:22px 0;padding:24px 16px;background:var(--stage);border:1px solid var(--line);border-radius:var(--r)}
 
 /* ---------- Lampen ---------- */
 .lamprow{display:flex;justify-content:center;gap:clamp(6px,2.2vw,14px);flex-wrap:nowrap}
@@ -79,8 +123,8 @@ b,strong{font-weight:700}
   --d:clamp(30px,8.4vw,58px);
   width:var(--d);height:var(--d);border-radius:50%;
   background:var(--lamp-off);
-  border:2px solid #3A4A5E;
-  box-shadow:inset 0 2px 5px rgba(0,0,0,.55);
+  border:2px solid var(--lamp-line);
+  box-shadow:var(--lamp-shadow);
   padding:0;cursor:default;position:relative;flex:none;
   transition:background .12s linear, box-shadow .12s linear, border-color .12s linear;
 }
@@ -92,31 +136,31 @@ b,strong{font-weight:700}
   box-shadow:0 0 14px 2px rgba(255,178,32,.55), inset 0 1px 3px rgba(255,255,255,.5);
 }
 button.lamp{cursor:pointer}
-button.lamp:hover{border-color:#5C7086}
-button.lamp.on:hover{border-color:#FFDF9B}
+button.lamp:hover{border-color:var(--lamp-line-hi)}
+button.lamp.on:hover{border-color:var(--lamp-hi)}
 .pv{font-family:var(--mono);font-size:clamp(11px,2.9vw,15px);color:var(--soft);font-variant-numeric:tabular-nums}
 .bitlabel{font-family:var(--mono);font-size:clamp(13px,3.4vw,18px);font-weight:700}
 .bitlabel.off{color:var(--soft)}
 .hidepv .pv{visibility:hidden}
 .readout{text-align:center;margin-top:20px;font-family:var(--mono);font-size:clamp(17px,4vw,22px)}
-.readout .big{font-size:clamp(30px,7.5vw,44px);font-weight:700;color:var(--lamp);display:block;line-height:1.15}
+.readout .big{font-size:clamp(30px,7.5vw,44px);font-weight:700;color:var(--accent-ink);display:block;line-height:1.15}
 .sum{text-align:center;color:var(--soft);font-family:var(--mono);font-size:clamp(12px,3.2vw,16px);margin-top:12px;word-break:break-word}
 
 /* ---------- Bedienelemente ---------- */
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .btn{
   font:inherit;font-weight:650;font-size:16px;
-  background:var(--lamp);color:#241703;border:none;border-radius:10px;
+  background:var(--lamp);color:var(--btn-ink);border:none;border-radius:10px;
   padding:13px 22px;cursor:pointer;min-height:48px;
 }
-.btn:hover{background:#FFD277}
+.btn:hover{background:var(--btn-hover)}
 .btn:disabled{background:var(--lamp-off);color:var(--soft);cursor:not-allowed}
 .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
 .btn.ghost:hover{background:var(--panel-hi)}
 .btn.wide{width:100%}
 input[type=number],input[type=text]{
   font:inherit;font-family:var(--mono);font-size:24px;font-weight:700;text-align:center;
-  background:#0E141F;color:var(--text);border:2px solid var(--line);border-radius:10px;
+  background:var(--stage);color:var(--text);border:2px solid var(--line);border-radius:10px;
   padding:10px 12px;width:150px;min-height:56px;
 }
 input:focus-visible,button:focus-visible,.lamp:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
@@ -128,8 +172,8 @@ input[type=number]{-moz-appearance:textfield}
   background:var(--panel-hi);border:2px solid var(--line);color:var(--text);
   border-radius:10px;padding:14px 16px;cursor:pointer;min-height:52px;
 }
-.choice:hover{border-color:#4A5E76}
-.choice[aria-pressed="true"]{border-color:var(--lamp);background:#2E2718}
+.choice:hover{border-color:var(--line-hi)}
+.choice[aria-pressed="true"]{border-color:var(--lamp);background:var(--choice-on)}
 
 /* ---------- Fortschritt / Aufgaben ---------- */
 .qhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;color:var(--soft);font-size:14.5px;margin-bottom:4px}
@@ -161,7 +205,7 @@ input[type=number]{-moz-appearance:textfield}
   width:38px;height:38px;flex:none;border-radius:50%;background:var(--lamp-off);
   display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:15px;color:var(--soft)
 }
-.unit.done .idx{background:var(--lamp);color:#241703}
+.unit.done .idx{background:var(--lamp);color:var(--btn-ink)}
 .unit .t{font-weight:650;line-height:1.3}
 .unit .s{font-size:14px;color:var(--soft)}
 
@@ -192,6 +236,17 @@ th{color:var(--soft);font-weight:600;font-size:13px}
   .cert{border-color:#000;background:#fff}
 }
 </style>
+<script>
+/* Farbschema so früh wie möglich setzen, damit es nicht kurz aufblitzt */
+(function(){
+  var t=null;
+  try{ t=localStorage.getItem('binaerkurs.theme'); }catch(e){}
+  if(t!=='light' && t!=='dark'){
+    t = (window.matchMedia && window.matchMedia('(prefers-color-scheme:light)').matches) ? 'light' : 'dark';
+  }
+  document.documentElement.setAttribute('data-theme',t);
+})();
+</script>
 </head>
 <body>
 <header class="top">
@@ -199,6 +254,7 @@ th{color:var(--soft);font-weight:600;font-size:13px}
     <div class="brand">Bit<span>&amp;</span>Lampe</div>
     <div class="rail" id="rail" aria-hidden="true"></div>
     <button class="toolbtn" id="pvToggle" aria-pressed="true">Stellenwerte</button>
+    <button class="toolbtn noprint" id="themeToggle" type="button" aria-label="Farbschema wechseln">☀️</button>
     <button class="toolbtn noprint" id="homeBtn">Übersicht</button>
   </div>
 </header>
@@ -929,6 +985,22 @@ function render(){
   applyPv(); drawRail(); m();
 }
 document.getElementById('homeBtn').onclick = ()=> go('map');
+/* ---------- Hell / Dunkel ---------- */
+const themeBtn = document.getElementById('themeToggle');
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  const label = t==='dark' ? 'Zum hellen Farbschema wechseln' : 'Zum dunklen Farbschema wechseln';
+  themeBtn.textContent = t==='dark' ? '☀️' : '🌙';
+  themeBtn.setAttribute('aria-label', label);
+  themeBtn.title = label;
+}
+themeBtn.onclick = ()=>{
+  const next = document.documentElement.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
+  try{ localStorage.setItem('binaerkurs.theme', next); }catch(e){}
+  applyTheme(next);
+};
+applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
+
 const pvBtn = document.getElementById('pvToggle');
 pvBtn.onclick = ()=>{ S.pv = !S.pv; save(); pvBtn.setAttribute('aria-pressed', S.pv?'true':'false'); applyPv(); };
 pvBtn.setAttribute('aria-pressed', S.pv?'true':'false');
